@@ -1,5 +1,5 @@
 
-### 4. BitLocker Recovery Key KB
+# BitLocker Recovery Key KB
 
 ```markdown
 # Retrieve a BitLocker Recovery Key for a Windows 11 Device
