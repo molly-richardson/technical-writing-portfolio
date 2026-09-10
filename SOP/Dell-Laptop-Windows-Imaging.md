@@ -1,205 +1,226 @@
 # Windows Imaging Process for Dell Laptops and Desktops
 
-**Document Type:** Standard Operating Procedure (SOP)  
 **Version:** 1.2  
 **Author:** Molly Richardson  
-**Status:** Portfolio Sample — Sanitized
-
-> **Portfolio Disclaimer:** This document has been sanitized for portfolio use. Organization-specific names, credentials, network information, addresses, internal procedures, and other identifying details have been generalized or omitted.
-
-## Purpose
-
-This Standard Operating Procedure (SOP) provides a structured process for preparing, configuring, and imaging Dell laptops and desktops in an enterprise environment.
-
-The procedure covers BIOS/UEFI preparation, network configuration, PXE boot, disk preparation, Windows deployment, network authorization, post-image verification, and device handoff.
-
-## Scope
-
-This procedure applies to approved Dell laptops and desktops that require enterprise Windows imaging through a centralized network deployment process.
-
-The procedure includes:
-
-- BIOS/UEFI configuration
-- Network and PXE preparation
-- Network access control registration
-- Disk preparation
-- Enterprise Windows imaging
-- Device naming
-- Post-image configuration and verification
-- Troubleshooting
-- Documentation and handoff
-
-> **Note:** BIOS/UEFI options and names vary by Dell model and organizational configuration. Follow current organizational deployment standards when configuring settings.
-
-## Roles and Responsibilities
-
-### IT Support Technician
-
-Responsible for:
-
-- Preparing the device
-- Configuring required BIOS/UEFI settings
-- Registering the device for network access
-- Initiating PXE imaging
-- Preparing the disk
-- Selecting the appropriate enterprise image
-- Performing post-image validation
-- Documenting the completed deployment
-
-### Network Administrator
-
-Responsible for:
-
-- Network authorization
-- NAC registration
-- VLAN configuration
-- Connectivity
-- Network-related troubleshooting
-
-### System Administrator
-
-Responsible for:
-
-- Enterprise Windows images
-- Deployment infrastructure
-- Image availability
-- System-level configuration requirements
-
-## Prerequisites
-
-Before beginning imaging, verify that the following are available:
-
-- Approved Dell laptop or desktop
-- Administrative access to BIOS/UEFI
-- Device MAC address
-- Access to the approved network registration system
-- Appropriate imaging network
-- Ethernet connection or approved USB-C Ethernet adapter
-- PXE-enabled network connection
-- Approved enterprise Windows image
-- Device naming convention
-- Asset information
-- Device location
-- Required firmware
-- Required deployment documentation
 
 ---
 
-# Procedure
+## 1. Purpose
 
-## 1. Enter BIOS/UEFI
+This Standard Operating Procedure (SOP) outlines the complete procedure for preparing, configuring, and imaging Dell laptops and desktops in an enterprise environment. It includes BIOS/UEFI configuration, network boot preparation, disk provisioning, Windows imaging, and new-device network registration.
 
-1. Power on the Dell device.
-2. Press `F2` during startup to enter BIOS/UEFI configuration.
-3. Allow the BIOS/UEFI interface to load completely.
+## 2. Scope
 
-## 2. Configure Boot Settings
+Applies to all Dell equipment being deployed or reimaged in an organization using centralized PXE boot and enterprise Windows imaging tools.
 
-Verify the boot configuration according to the organization's approved imaging standard.
+## 3. Roles & Responsibilities
 
-Common settings may include:
+* **IT Support Technician:** Performs BIOS configuration, network setup, and imaging.
+* **Network Administrator:** Manages device network authorization and VLAN assignments.
+* **System Administrator:** Maintains the imaging server and approves image selections.
 
-- Windows Boot Manager
-- Onboard NIC IPv4
-- UEFI boot mode
-- Legacy Option ROMs disabled
-- UEFI Boot Path Security configured according to organizational policy
-- Correct system date and time
+## 4. Prerequisites
 
-Do not change settings that are not required for the approved deployment process.
+Before starting, ensure you have:
 
-## 3. Configure System Settings
+* A new or existing Dell system requiring imaging
+* Access to BIOS/UEFI settings
+* Access to organizational network-access control (NAC) / MAC-registration portal
+* Assigned static or DHCP reservation IP (if required)
+* Cabled Ethernet or USB-C Ethernet adapter
+* Access to PXE imaging network
+* Approved Windows enterprise image
+* Computer naming convention
+* Asset number and location information
+* Firmware package available if updates are required
 
-Verify applicable system settings, including:
+---
 
-- UEFI Network Stack enabled
-- Integrated NIC enabled
-- PXE capability enabled
-- SATA configuration according to the approved image requirements
-- M.2 PCIe SSD detected
-- Thunderbolt or USB-C settings configured according to the approved imaging process
+## 5. Procedure
 
-Hardware and BIOS options vary by model. Follow current deployment standards for the specific device.
+<Steps>
+  <Step title="Enter BIOS Setup" subtitle="Prerequisite">
 
-## 4. Configure Security Settings
+1. Power on the device.
+2. Press **F2** to open BIOS/UEFI configuration.
+3. *Verification:* Confirm the BIOS/UEFI main configuration menu loads successfully.
 
-Verify required security settings according to organizational policy.
+  </Step>
 
-Depending on the approved imaging process, settings may include:
+  <Step title="Configure Boot Settings">
 
-- TPM enabled
-- Secure Boot temporarily disabled if required for imaging
-- Microsoft UEFI CA enabled
-- Required UEFI security options configured
-- UEFI Capsule Firmware Updates configured according to policy
+Navigate through the BIOS menu and configure the following parameters:
 
-> **Security Note:** Secure Boot and other security controls should only be changed when required by the approved imaging process. Re-enable required security controls after imaging.
+* **General > Boot Sequence:**
+  * **Windows Boot Manager:** **ON** (Enabled)
+  * **Onboard NIC (IPv4):** **ON** (Enabled)
 
-## 5. Configure Additional Hardware Settings
+* **General > Advanced Boot Options:**
+  * **Enable Legacy Option ROMs:** **OFF** (Disabled)
 
-Verify applicable settings required by the enterprise deployment process.
+* **General > UEFI Boot Path Security:**
+  * Set to `Always, Except Internal HDD`
 
-These may include:
+* **General > Date/Time:**
+  * Set to current date and local timezone.
 
-- Intel SGX
-- Power recovery settings
-- Wake on AC
-- AC recovery
-- Auto On Time
-- WLAN radio
-- Deep Sleep
-- Wake on LAN/WAN
-- Sleep settings
-- USB-C power settings
-- Intel Virtualization Technology
-- Trusted Execution
+*Verification:* Review the Boot Sequence list to ensure `Windows Boot Manager` and `Onboard NIC (IPv4)` are checked, and Legacy Option ROMs is unchecked.
 
-Only configure settings required by the organization's approved device standard.
+  </Step>
 
-## 6. Apply BIOS/UEFI Changes
+  <Step title="Configure System Setup & Drives">
 
-1. Review the configuration.
-2. Confirm that required settings are correct.
-3. Apply the changes.
-4. Exit BIOS/UEFI.
-5. Allow the system to restart.
+* **System Configuration > Integrated NIC:**
+  * **Enable UEFI Network Stack:** **ON** (Checked / Enabled)
+  * **NIC Mode:** Set to **Enabled w/ PXE**
 
-## 7. Register the Device on the Network
+* **System Configuration > SATA Operation:**
+  * Set to **AHCI**
 
-Register the device through the organization's approved network access control system.
+* **System Configuration > Drives:**
+  * **M.2 PCIe SSD (Primary OS Drive):** **ON** (Enabled)
+  * **All other drives (SATA/Secondary):** **OFF** (Disabled)
 
-1. Open the network registration portal.
-2. Select the applicable service area or site.
-3. Enter the device MAC address.
-4. Select the appropriate identity group.
-5. Assign the approved imaging network or VLAN.
-6. Submit the registration.
-7. Allow the registration to propagate.
+* **System Configuration > Thunderbolt Adapter Configuration:**
+  * **Enable Thunderbolt Technology Support:** **ON** (Enabled)
+  * **Enable Thunderbolt Adapter Boot Support:** **ON** (Enabled)
+  * **Enable Thunderbolt Adapter Pre-boot Modules:** **ON** (Enabled)
+  * **Security Level:** Set to **No Security**
+    *(Note: Required when imaging laptops using a USB-C to Ethernet adapter).*
 
-The device must be authorized on the appropriate network before PXE imaging can begin.
+*Verification:* Verify SATA Operation shows AHCI selected and UEFI Network Stack is checked.
 
-## 8. Initiate PXE Boot
+  </Step>
 
-1. Restart the device.
-2. Press `F12` during startup to access the boot menu.
-3. Select the appropriate network boot option, such as:
-   - Onboard NIC IPv4
-   - Approved USB NIC IPv4
-4. Press `Enter`.
-5. Confirm that the device reaches the enterprise deployment environment.
+  <Step title="Configure Security Settings">
 
-If PXE does not start, verify network connectivity, MAC registration, VLAN assignment, and network authorization.
+* **Security > UEFI Capsule Firmware Updates:**
+  * **Disable:** **OFF** (Disabled), unless organization mandates automated firmware updates.
 
-## 9. Prepare the Disk
+* **Security > TPM 2.0 Security:**
+  * **TPM On:** **ON** (Enabled)
+  * **PPI Bypass for Enable Commands:** **ON** (Enabled)
 
-> **Warning:** The following command permanently removes data from the selected disk. Verify that the correct device is being prepared before running `clean`.
+* **Security > Microsoft UEFI CA Key:**
+  * **Enable:** **ON** (Enabled)
 
-At the deployment environment command prompt, use the approved disk preparation procedure.
+* **Security > Secure Boot Enable:**
+  * **OFF** (Temporarily Disabled during imaging if required by your PXE environment; re-enable post-image).
 
-```text
-diskpart
-select disk 0
-clean
-convert gpt
-exit
-exit
+*Verification:* Ensure TPM On is checked and Secure Boot is toggled off for the initial imaging workflow.
+
+  </Step>
+
+  <Step title="Configure Intel SGX Settings">
+
+* **Intel SGX Settings:**
+  * **Enable Intel SGX:** **ON** (Enabled)
+  * **Enclave Memory Size:** Set to **128MB**
+
+*Verification:* Confirm Intel SGX status displays as Enabled.
+
+  </Step>
+
+  <Step title="Configure Power Management Settings">
+
+* **Power Management:**
+  * **Wake on AC:** **ON** (Enabled)
+  * **AC Recovery:** Set to **Power On**
+  * **Auto On Time:** Set to **Every Day**
+  * **Wireless Radio Control:** Set to **Control WLAN Radio**
+  * **Deep Sleep Control:** **OFF** (Disabled)
+  * **Wake on LAN/WAN:** Set to **LAN or WLAN**
+  * **Block Sleep:** **ON** (Enabled)
+  * **Type-C Connector Power:** Set to **7.5 Watts**
+
+*Verification:* Confirm Deep Sleep Control is set to Disabled and Wake on LAN is active.
+
+  </Step>
+
+  <Step title="Configure Virtualization Settings">
+
+* **Virtualization Support:**
+  * **Intel Virtualization Technology:** **ON** (Enabled)
+  * **VT for Direct I/O (Trusted Execution):** **ON** (Enabled)
+
+*Verification:* Verify both virtualization checkboxes remain checked.
+
+  </Step>
+
+  <Step title="Apply BIOS Changes">
+
+1. Click **Apply** at the bottom of the screen to save changes.
+2. Click **Exit** to reboot the machine.
+
+*Verification:* Machine reboots without displaying BIOS setup error prompts.
+
+  </Step>
+
+  <Step title="Register Device in Network Authorization System (NAC)">
+
+If imaging a new laptop or desktop, add it to the organization's device-authorization tool:
+
+1. **Access NAC/MAC-Registration Portal:** Log into the network device-authorization tool using admin credentials and select **Add or Update MAC**.
+
+2. **Enter Device Information:**
+   * **Service Area / Department:** Select deployment region or organizational unit.
+   * **Site Code / Location:** Select building or deployment site.
+   * **MAC Address:** Enter MAC address printed on device or retrieved from BIOS.
+   * **Identity Group / Device Type:** Choose **Workstation** or **Laptop**.
+   * **VLAN Assignment:** Choose the designated **Computer Imaging VLAN**.
+
+3. **Review & Submit:** Submit entry and allow time for policy propagation.
+
+*Verification:* Reboot device and confirm it receives an IP address and PXE boot prompt over the network.
+
+  </Step>
+
+  <Step title="Initiate PXE Boot">
+
+1. Restart the system.
+2. Press **F12** to enter the Boot Options menu.
+3. Select boot media:
+   * **Onboard NIC (IPv4)** for onboard Ethernet cable imaging.
+   * **USB NIC (IPv4)** for USB-C adapter imaging.
+4. Press **ENTER** when prompted to load the WinPE/PXE imaging environment.
+
+*Verification:* System successfully boots into the network imaging environment screen.
+
+  </Step>
+
+  <Step title="Perform Disk Preparation">
+
+1. Press **F8** within the imaging environment to launch the Command Prompt window.
+2. Run the following commands sequentially:
+
+   ```cmd
+   diskpart
+   select disk 0
+   clean
+   convert gpt
+   exit
+   exit
+
+   
+##  Select and Deploy Image
+
+1. Choose the correct enterprise Windows image.
+2. Select the organizational region, business unit, or site (genericized).
+3. Enter the computer name using the standard naming convention:
+   - Example: `[Location]-LT-[Asset#]`
+4. Confirm the selected options.
+5. Start the imaging process.
+
+## Acceptance Criteria
+
+Imaging is considered successful when all of the following are verified:
+
+- [ ] Device boots cleanly into Windows.
+- [ ] Correct enterprise image loads with no post-install errors.
+- [ ] Device is authorized on the network.
+- [ ] Secure Boot and TPM settings match organizational policy.
+- [ ] Computer naming convention is applied correctly.
+- [ ] Device appears in required asset/inventory systems.
+- [ ] NIC functions properly through wired Ethernet or USB-C.
+
+
