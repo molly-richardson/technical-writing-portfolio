@@ -1,5 +1,5 @@
 
-### 3. Windows Imaging SOP
+#Windows Imaging SOP
 
 ```markdown
 # Windows Imaging Process for Dell Laptops and Desktops
