@@ -1,5 +1,5 @@
 
-### 6. ServiceNow Resolution Notes KB
+# ServiceNow Resolution Notes KB
 
 ```markdown
 # Writing Effective ServiceNow Resolution Notes
